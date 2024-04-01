@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Adicionar e Listar Usuários</title>
+</head>
+<body>
+    <!-- Formulário para adicionar novo usuário -->
+    <h1>Adicionar Novo Usuário</h1>
+    <form action="http://localhost/APIrest/api.php" method="POST">
+        <label for="name">Nome do Usuário:</label>
+        <input type="text" id="name" name="name" required>
+        <button type="submit">Adicionar</button>
+    </form>
+
+    <!-- Botão e div para listar todos os usuários -->
+    <h1>Listar Todos os Usuários</h1>
+    <button onclick="listarUsuarios()">Listar Usuários</button>
+    <div id="listaUsuarios"></div>
+
+    <!-- Script JavaScript para fazer requisição GET e listar usuários -->
+    <script>
+        function listarUsuarios() {
+            // Faz uma requisição GET para a API
+            fetch('http://localhost/APIrest/api.php', {
+                method: 'GET'
+            })
+            .then(response => {
+                // Verifica se a resposta da API está ok
+                if (!response.ok) {
+                    throw new Error('Erro ao listar usuários');
+                }
+                // Converte a resposta para JSON
+                return response.json();
+            })
+            .then(data => {
+                // Limpa o conteúdo anterior da div listaUsuarios
+                document.getElementById('listaUsuarios').innerHTML = '';
+
+                // Adiciona os usuários na div listaUsuarios
+                data.forEach(user => {
+                    document.getElementById('listaUsuarios').innerHTML +=
+                        `<p><strong>ID:</strong> ${user.id}, <strong>Nome:</strong> ${user.name}</p>`;
+                });
+            })
+            .catch(error => {
+                // Exibe erro no console e na div listaUsuarios
+                console.error('Erro ao listar usuários:', error);
+                document.getElementById('listaUsuarios').innerText = 'Erro ao listar usuários';
+            });
+        }
+    </script>
+</body>
+</html>
